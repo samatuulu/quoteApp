@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'lab_quote.apps.LabQuoteConfig',
     'rest_framework',
     'rest_framework.authtoken',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
@@ -109,6 +110,9 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_RENDER_CLASSES': (
+        'rest_framework.render.JSONRenderer',
     )
 }
 
