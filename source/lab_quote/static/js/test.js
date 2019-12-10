@@ -1,6 +1,4 @@
-
 const baseUrl = 'http://localhost:8000/api/';
-
 
 function getFullPath(path) {
     path = path.replace(/^\/+|\/+$/g, '');
@@ -42,6 +40,7 @@ function logIn(username, password) {
     request.done(function(data, status, response) {
         console.log('Received token');
         saveToken(data.token);
+        console.log(localStorage.getItem('authToken'));
     }).fail(function(response, status, message) {
         console.log('Could not get token');
         console.log(response);
@@ -50,5 +49,6 @@ function logIn(username, password) {
 
 $(document).ready(function() {
     let token = getToken();
-    if (!token) logIn('admin', 'admin');
+    if (!token) logIn('admin', 'admin')
+        else console.log('Token exists');
 });
