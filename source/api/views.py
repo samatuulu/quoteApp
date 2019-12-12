@@ -1,10 +1,12 @@
-from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 
 from api.serializers import QuoteSerializer
-from lab_quote.models import Quote
+from lab_quote.models import Quote, QUOTE_APPROVED, QUOTE_STATUS_CHOICES
+from rest_framework.authtoken.models import Token
+
+
 
 
 class LogoutView(APIView):
@@ -18,6 +20,13 @@ class LogoutView(APIView):
 
 
 class QuoteViewset(viewsets.ModelViewSet):
-    permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
+    permission_classes = [permissions.AllowAny]
     queryset = Quote.objects.all()
     serializer_class = QuoteSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            return Quote.objects.all()
+        else:
+            return Quote.objects.filter(status=QUOTE_APPROVED)

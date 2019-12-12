@@ -7,14 +7,14 @@ from api.views import LogoutView
 
 
 router = routers.DefaultRouter()
-router.register(r'quote', views.QuoteViewset)
+router.register(r'quotes', views.QuoteViewset)
 
 app_name = 'api'
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('login/', obtain_auth_token, name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+
 
 ]
