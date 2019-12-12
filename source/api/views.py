@@ -1,12 +1,10 @@
+from rest_framework.permissions import BasePermission, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 
 from api.serializers import QuoteSerializer
-from lab_quote.models import Quote, QUOTE_APPROVED, QUOTE_STATUS_CHOICES
-from rest_framework.authtoken.models import Token
-
-
+from lab_quote.models import Quote, QUOTE_APPROVED
 
 
 class LogoutView(APIView):
@@ -19,9 +17,19 @@ class LogoutView(APIView):
         return Response({'status': 'ok'})
 
 
+class IsQuotOwner(BasePermission):
+
+    def has_permission(self, request, view):
+        return  request.user.has_perm('lab_quote.change_quote')
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        return obj.user == user
+
+
 class QuoteViewset(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-    queryset = Quote.objects.all()
+    permission_classes = [AllowAny]
+    queryset = Quote.objects.none()
     serializer_class = QuoteSerializer
 
     def get_queryset(self):
