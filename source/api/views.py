@@ -51,3 +51,15 @@ class RateUPView(APIView):
         quote.rating += 1
         quote.save()
         return Response({'id': quote.pk, 'rating': quote.rating})
+
+
+class RateDownView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, pk=None):
+        quote = get_object_or_404(Quote, pk=pk)
+        if quote.status != QUOTE_APPROVED:
+            return Response({'error': 'Quote is not approved1'}, status=400)
+        quote.rating -= 1
+        quote.save()
+        return Response({'id': quote.pk, 'rating': quote.rating})
