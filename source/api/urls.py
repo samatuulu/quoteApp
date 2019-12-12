@@ -3,7 +3,7 @@ from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 
 from api import views
-from api.views import LogoutView
+from api.views import LogoutView, RateUPView
 
 router = routers.DefaultRouter()
 router.register(r'quote', views.QuoteViewset)
@@ -13,5 +13,6 @@ app_name = 'api'
 urlpatterns = [
     path('', include(router.urls)),
     path('login/', obtain_auth_token, name='login'),
-    path('logout/', LogoutView.as_view(), name='logout')
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('quote/<int:pk>/rate-up/', RateUPView.as_view(), name='rate_up')
 ]

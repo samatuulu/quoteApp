@@ -1,3 +1,4 @@
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import BasePermission, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -38,3 +39,15 @@ class QuoteViewset(viewsets.ModelViewSet):
             return Quote.objects.all()
         else:
             return Quote.objects.filter(status=QUOTE_APPROVED)
+
+
+class RateUPView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, pk=None):
+        quote = get_object_or_404(Quote, pk=pk)
+        if quote.status != QUOTE_APPROVED:
+            return Response({'error': 'Quote is not approved1'}, status=400)
+        quote.rating += 1
+        quote.save()
+        return Response({'id': quote.pk, 'rating': quote.rating})
